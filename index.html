@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Weather App</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const apiKey = '95ce6308b6913584d802de37d8bf88a8';
+            $('form').submit(function(event) {
+                event.preventDefault();
+                const city = $('#city').val();
+                $.get('https://api.openweathermap.org/data/2.5/weather', {
+                    q: city,
+                    appid: apiKey,
+                    units: 'metric'
+                }).done(function(response) {
+                    const temperature = response.main.temp;
+                    const description = response.weather[0].description;
+                    const icon = response.weather[0].icon;
+
+                    $('#result').html(`
+            <h2>${city}</h2>
+            <p>Temperature: ${temperature} &deg;C</p>
+            <p>Description: ${description}</p>
+            <img src="http://openweathermap.org/img/w/${icon}.png" alt="Weather Icon">
+          `);
+                }).fail(function() {
+                    $('#result').html('<p>Failed to fetch weather information.</p>');
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>Weather App</h1>
+<form>
+    <label for="city">City:</label>
+    <input type="text" id="city" required>
+    <button type="submit">Get Weather</button>
+</form>
+<div id="result"></div>
+</body>
+</html>
